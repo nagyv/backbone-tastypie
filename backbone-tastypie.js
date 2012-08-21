@@ -30,8 +30,7 @@
      * This requires 2 requests to do a create, so you may want to use some other method in production.
      * Modified from http://joshbohde.com/blog/backbonejs-and-django
      */
-    Backbone.oldSync = Backbone.sync;
-    Backbone.sync = function( method, model, options ) {
+    Backbone.Tastypie.sync = function( method, model, options ) {
         var headers = {};
 
         if ( Backbone.Tastypie.apiKey && Backbone.Tastypie.apiKey.username.length ) {
@@ -71,16 +70,16 @@
             };
 
             // Make the request, make it accessibly by assigning it to the 'request' property on the deferred
-            dfd.request = Backbone.oldSync( method, model, options );
+            dfd.request = Backbone.sync( method, model, options );
             return dfd;
         }
 
-        return Backbone.oldSync( method, model, options );
+        return Backbone.sync( method, model, options );
     };
 
-    _.extend(Backbone.Model.prototype, {
+    Backbone.Tastypie.Model = Backbone.RelationalModel.extend({
         idAttribute: 'resource_uri',
-
+        sync: Backbone.Tastypie.sync,
         url: function() {
             var url = getValue(this, 'urlRoot') || getValue(this.collection, 'urlRoot') || urlError();
             
@@ -124,9 +123,10 @@
             })
             return $.ajax(options)
         }
-    });
+    })
 
-    _.extend(Backbone.Collection.prototype, {
+    Backbone.Tastypie.Collection = Backbone.Collection.extend({
+        sync: Backbone.Tastypie.sync,
         initialize: function(collections, options) {
             _.bindAll(this, 'fetchNext', 'fetchPrevious');
 
