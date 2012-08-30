@@ -106,9 +106,8 @@
           if (!item) {
             // download character from the server
             item = new this.constructor({resource_uri: itemid});
-            $.ajaxSetup({async: use_ajax});
+            options = $.extend({async: use_ajax}, options);
             var deferred = item.fetch(options);
-            $.ajaxSetup({async: true});
           } else if (options.success) {
             options.success(item)
           }
@@ -215,9 +214,8 @@
             // download character from the server
             item = new this.model();
             item.id = itemid;
-            $.ajaxSetup({async: use_ajax});
+            options = $.extend({async: use_ajax}, options);
             var deferred = item.fetch(options);
-            $.ajaxSetup({async: true});
             if(options.add) this.add(item);
           } else if (options.success) {
             options.success(item)
