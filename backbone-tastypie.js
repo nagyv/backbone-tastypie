@@ -6,11 +6,6 @@
     var backbone = require('backbone');
 
     module.exports = factory(jquery, underscore, backbone);
-
-  } else if (typeof define === 'function' && define.amd) {
-
-    define(['jquery', 'underscore', 'backbone'], factory);
-
   } else {
     this.bpm = factory(jQuery, _, Backbone)
   } 
@@ -141,8 +136,8 @@
         url: function(models) {
             var url = this.urlRoot;
 
-            if (models) {
-                var ids = _.map(models, function(model) {
+            if (this.length > 0) {
+                var ids = _.map(this.models, function(model) {
                     return model._getId();
                 });
 
